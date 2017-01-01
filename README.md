@@ -16,10 +16,10 @@ All data is stored, processed and managed with AES-256 bit encryption.
 Encryption keys are generated when your account is created and stored with
 AES-256 bit encryption on our servers.
 
-![](https://www.solutions-apex.tk/wifi-pass-db/assets/acct_create.png)
+![](media/2d95b2e8d9a9700c0303c84d30f9d4f2.png)
 
 *Initial account creation*
 
-![](https://www.solutions-apex.tk/wifi-pass-db/assets/data_txrx.png)
+![](media/2d95b2e8d9a9700c0303c84d30f9d4f2.png)
 
 *Data transfer to and from server*
