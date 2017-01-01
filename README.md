@@ -16,10 +16,10 @@ All data is stored, processed and managed with AES-256 bit encryption.
 Encryption keys are generated when your account is created and stored with
 AES-256 bit encryption on our servers.
 
-![](media/2d95b2e8d9a9700c0303c84d30f9d4f2.png)
+![](media/acct_create.png)
 
 *Initial account creation*
 
-![](media/2d95b2e8d9a9700c0303c84d30f9d4f2.png)
+![](media/data_txrx.png)
 
 *Data transfer to and from server*
