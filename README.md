@@ -9,6 +9,8 @@ Description
 The Wi-Fi Password Database App allows you to securely sync your Wi-Fi passwords
 to the ApexTech Solutions servers.
 
+_\*The Android app is designed to view, add, modify, or delete stored Wi-Fi Passwords. Not all platforms will support this feature\*_
+
 Security
 --------
 
