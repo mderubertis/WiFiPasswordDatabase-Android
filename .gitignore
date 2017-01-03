@@ -7,3 +7,6 @@
 /build
 /captures
 .externalNativeBuild
+/app/src/main/java/AppConfig.java
+/app/src/main/java/AppController.java
+
