@@ -331,7 +331,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
-        private Boolean mSuccess;
+        private Boolean mSuccess = false;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -374,6 +374,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // Inserting row in users table
                             db.addUser(name, email, uid, created_at);
 
+                            // Launch main activity
+                            Intent intent = new Intent(LoginActivity.this,
+                                    MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
                             mSuccess = true;
                         } else {
                             // Error in login. Get the error message
@@ -413,11 +419,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             };
 
+            mSuccess = true;
+
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
             // TODO: register the new account here.
-            return mSuccess;
+            return true;
         }
 
         @Override
@@ -425,7 +433,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            /*if (success) {
                 // Launch main activity
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
@@ -433,7 +441,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
             } else {
                 mEmailView.requestFocus();
-            }
+            }*/
         }
 
         @Override
