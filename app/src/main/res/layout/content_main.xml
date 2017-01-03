@@ -13,4 +13,12 @@
     tools:context="tk.solutions_apex.wifipassworddatabase.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView" />
 </RelativeLayout>

@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity
         TextView nav_name = (TextView) findViewById(R.id.user_name);
         TextView nav_email = (TextView) findViewById(R.id.user_email);
 
-        nav_name.setText(user.get("name"));
-        nav_email.setText(user.get("email"));
-
     }
 
     @Override
