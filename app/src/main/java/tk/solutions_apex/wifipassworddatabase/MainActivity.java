@@ -1,9 +1,13 @@
 package tk.solutions_apex.wifipassworddatabase;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -64,8 +69,23 @@ public class MainActivity extends AppCompatActivity
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
 
-        TextView nav_name = (TextView) findViewById(R.id.user_name);
-        TextView nav_email = (TextView) findViewById(R.id.user_email);
+        TextView nav_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name);
+        TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_email);
+        ImageView nav_img = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.user_img);
+
+        final Resources res = getResources();
+        final int tileSize = res.getDimensionPixelSize(R.dimen.letter_tile_size);
+
+        final LetterTileProvider tileProvider = new LetterTileProvider(this);
+        final Bitmap letterTile = tileProvider.getLetterTile(user.get("name"), user.get("email"), tileSize, tileSize);
+
+        RoundedBitmapDrawable dr =
+                RoundedBitmapDrawableFactory.create(res, letterTile);
+        dr.setCornerRadius(Math.max(letterTile.getWidth(), letterTile.getHeight()) / 2.0f);
+
+        nav_name.setText(user.get("name"));
+        nav_email.setText(user.get("email"));
+        nav_img.setImageDrawable(dr);
 
     }
 
@@ -120,6 +140,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.action_signout) {
+            logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

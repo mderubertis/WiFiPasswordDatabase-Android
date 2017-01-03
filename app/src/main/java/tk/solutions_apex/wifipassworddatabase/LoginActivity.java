@@ -222,6 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask.execute((Void) null);
         }
     }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -278,7 +279,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // Select only email addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                                                                     .CONTENT_ITEM_TYPE},
+                .CONTENT_ITEM_TYPE},
 
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
@@ -330,6 +331,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private Boolean mSuccess;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -372,16 +374,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // Inserting row in users table
                             db.addUser(name, email, uid, created_at);
 
-                            // Launch main activity
-                            Intent intent = new Intent(LoginActivity.this,
-                                    MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            mSuccess = true;
                         } else {
                             // Error in login. Get the error message
                             String errorMsg = jObj.getString("error_msg");
                             Toast.makeText(getApplicationContext(),
                                     errorMsg, Toast.LENGTH_LONG).show();
+
+                            mSuccess = false;
                         }
                     } catch (JSONException e) {
                         // JSON error
@@ -397,6 +397,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Log.e(TAG, "Login Error: " + error.getMessage());
                     Toast.makeText(getApplicationContext(),
                             error.getMessage(), Toast.LENGTH_LONG).show();
+                    mSuccess = false;
                 }
             }) {
 
@@ -416,7 +417,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
 
             // TODO: register the new account here.
-            return true;
+            return mSuccess;
         }
 
         @Override
@@ -425,10 +426,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                // Launch main activity
+                Intent intent = new Intent(LoginActivity.this,
+                        MainActivity.class);
+                startActivity(intent);
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mEmailView.requestFocus();
             }
         }
 
