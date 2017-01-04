@@ -1,11 +1,16 @@
 package tk.solutions_apex.wifipassworddatabase;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
@@ -25,11 +30,25 @@ import java.util.HashMap;
 import tk.solutions_apex.wifipassworddatabase.helper.SQLiteHandler;
 import tk.solutions_apex.wifipassworddatabase.helper.SessionManager;
 
+import static android.R.attr.fragment;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private SQLiteHandler db;
     private SessionManager session;
+    NavigationView navigationView;
+    private DrawerLayout drawer;
+
+    // index to identify current nav menu item
+    public static int navItemIndex = 0;
+
+    // tags used to attach the fragments
+    private static final String TAG_HOME = "dashboard";
+    private static final String TAG_ABOUT = "about";
+    public static String CURRENT_TAG = TAG_HOME;
+
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +56,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mHandler = new Handler();
+
+        //getSupportActionBar().setTitle("Dashboard");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -47,13 +70,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // SqLite database handler
@@ -87,6 +110,12 @@ public class MainActivity extends AppCompatActivity
         nav_email.setText(user.get("email"));
         nav_img.setImageDrawable(dr);
 
+        if (savedInstanceState == null) {
+            navItemIndex = 0;
+            CURRENT_TAG = TAG_HOME;
+            loadHomeFragment();
+        }
+
     }
 
     @Override
@@ -114,12 +143,76 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_signout) {
-            logoutUser();
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /***
+     * Returns respected fragment that user
+     * selected from navigation menu
+     */
+    private void loadHomeFragment() {
+        // selecting appropriate nav menu item
+        selectNavMenu();
+
+        // set toolbar title
+        setToolbarTitle();
+
+        // if user select the current navigation menu again, don't do anything
+        // just close the navigation drawer
+        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
+            drawer.closeDrawers();
+
+            return;
+        }
+
+        // Sometimes, when fragment has huge data, screen seems hanging
+        // when switching between navigation menus
+        // So using runnable, the fragment is loaded with cross fade effect
+        // This effect can be seen in GMail app
+        Runnable mPendingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                // update the main content by replacing fragments
+                Fragment fragment = getHomeFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.content_main, fragment, CURRENT_TAG);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        };
+
+        // If mPendingRunnable is not null, then add to the message queue
+        if (mPendingRunnable != null) {
+            mHandler.post(mPendingRunnable);
+        }
+
+        //Closing drawer on item click
+        drawer.closeDrawers();
+
+        // refresh toolbar menu
+        invalidateOptionsMenu();
+    }
+
+    private Fragment getHomeFragment() {
+        switch (navItemIndex) {
+            case 0:
+                // home
+                DashboardFragment dashboardFragment = new DashboardFragment();
+                return dashboardFragment;
+            case 1:
+                // about
+                AboutFragment aboutFragment = new AboutFragment();
+                return aboutFragment;
+            default:
+                return new DashboardFragment();
+        }
+    }
+
+    private void selectNavMenu() {
+        navigationView.getMenu().getItem(navItemIndex).setChecked(true);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -128,26 +221,39 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        } else if (id == R.id.action_signout) {
-            logoutUser();
+        switch (id) {
+            case R.id.nav_dashboard:
+                navItemIndex = 0;
+                CURRENT_TAG = TAG_HOME;
+                break;
+            case R.id.nav_about:
+                navItemIndex = 1;
+                CURRENT_TAG = TAG_ABOUT;
+                break;
+            case R.id.nav_signout:
+                logoutUser();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        //Checking if the item is in checked state or not, if not make it in checked state
+        if (item.isChecked()) {
+            item.setChecked(false);
+        } else {
+            item.setChecked(true);
+        }
+        item.setChecked(true);
+
+        loadHomeFragment();
         return true;
     }
+
+    private void setToolbarTitle() {
+        getSupportActionBar().setTitle(navigationView.getMenu().getItem(navItemIndex).getTitle());
+    }
+
 
     /**
      * Logging out the user. Will set isLoggedIn flag to false in shared
@@ -163,4 +269,5 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
         finish();
     }
+
 }
