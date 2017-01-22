@@ -21,15 +21,4 @@
 
         </RelativeLayout>
 
-    <TextView
-        android:text="Development Mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/devMode"
-        android:textAlignment="center"
-        android:textColor="?android:attr/textColorTertiaryInverse"
-        android:textStyle="normal|bold"
-        android:background="@android:color/holo_red_dark" />
 </RelativeLayout>

@@ -17,23 +17,4 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/app_basics"
-        android:layout_marginTop="4dp" />
-
-    <TextView
-        android:text="@string/app_intro_basics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/app_basics"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-        android:layout_below="@+id/app_description"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
-
 </RelativeLayout>
