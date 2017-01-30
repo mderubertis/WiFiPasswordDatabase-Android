@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class AboutFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_about,
                 container, false);
 
+        
         ((ImageView) view.findViewById(R.id.imgAcctCreate)).setImageBitmap(BitmapFactory.decodeResource(getResources(), R.raw.acct_create));
         ((ImageView) view.findViewById(R.id.imgTxRx)).setImageBitmap(BitmapFactory.decodeResource(getResources(), R.raw.data_txrx));
         return view;

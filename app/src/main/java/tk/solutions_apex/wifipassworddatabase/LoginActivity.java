@@ -217,7 +217,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
@@ -340,6 +339,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showProgress(true);
+                }
+            });
             // TODO: attempt authentication against a network service.
 
             // Tag used to cancel the request
@@ -400,6 +405,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    showProgress(false);
                     Log.e(TAG, "Login Error: " + error.getMessage());
                     Toast.makeText(getApplicationContext(),
                             error.getMessage(), Toast.LENGTH_LONG).show();

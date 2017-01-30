@@ -1,19 +1,14 @@
 package tk.solutions_apex.wifipassworddatabase;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,8 +25,6 @@ import java.util.HashMap;
 import tk.solutions_apex.wifipassworddatabase.helper.SQLiteHandler;
 import tk.solutions_apex.wifipassworddatabase.helper.SessionManager;
 
-import static android.R.attr.fragment;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -44,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     public static int navItemIndex = 0;
 
     // tags used to attach the fragments
-    private static final String TAG_HOME = "dashboard";
+    private static final String TAG_HOME = "networks";
     private static final String TAG_ABOUT = "about";
     public static String CURRENT_TAG = TAG_HOME;
 
@@ -60,14 +53,6 @@ public class MainActivity extends AppCompatActivity
         mHandler = new Handler();
 
         //getSupportActionBar().setTitle("Dashboard");
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NewNetworkActivity.class));
-            }
-        });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -199,14 +184,14 @@ public class MainActivity extends AppCompatActivity
         switch (navItemIndex) {
             case 0:
                 // home
-                DashboardFragment dashboardFragment = new DashboardFragment();
-                return dashboardFragment;
+                NetworksFragment networksFragment = new NetworksFragment();
+                return networksFragment;
             case 1:
                 // about
                 AboutFragment aboutFragment = new AboutFragment();
                 return aboutFragment;
             default:
-                return new DashboardFragment();
+                return new NetworksFragment();
         }
     }
 
@@ -221,7 +206,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_dashboard:
+            case R.id.nav_networks:
                 navItemIndex = 0;
                 CURRENT_TAG = TAG_HOME;
                 break;
