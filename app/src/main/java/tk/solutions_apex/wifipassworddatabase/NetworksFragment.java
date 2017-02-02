@@ -11,14 +11,18 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import tk.solutions_apex.wifipassworddatabase.helper.Network;
+import tk.solutions_apex.wifipassworddatabase.helper.NetworksDataSource;
 import tk.solutions_apex.wifipassworddatabase.helper.SQLiteHandler;
 
 
@@ -31,14 +35,8 @@ import tk.solutions_apex.wifipassworddatabase.helper.SQLiteHandler;
  * create an instance of this fragment.
  */
 public class NetworksFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private NetworksDataSource datasource;
+    public static ArrayAdapter<Network> adapter;
 
     OnFragmentInteractionListener mListener;
 
@@ -81,7 +79,16 @@ public class NetworksFragment extends Fragment {
             }
         });
 
+        datasource = new NetworksDataSource(getContext().getApplicationContext());
+        datasource.open();
 
+        List<Network> ssids = datasource.getAllNetworkNames();
+
+        // use the SimpleCursorAdapter to show the
+        // elements in a ListView
+        adapter = new ArrayAdapter<Network>(getContext(),
+                android.R.layout.simple_list_item_1, ssids);
+        ((ListView) view.findViewById(R.id.list_networks)).setAdapter(adapter);
 
         return view;
     }
