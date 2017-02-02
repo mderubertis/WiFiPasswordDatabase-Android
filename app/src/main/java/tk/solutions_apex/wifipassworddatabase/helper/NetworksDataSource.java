@@ -72,21 +72,21 @@ public class NetworksDataSource {
         return networks;
     }
 
-    public List<Network> getAllNetworkNames() {
-        List<Network> networks = new ArrayList<Network>();
+    public List<String> getAllNetworkNames() {
+        List<String> networksSSID = new ArrayList<>();
 
         Cursor cursor = database.query(NetworkSQLiteHandler.TABLE_NETWORKS,
-                new String[]{NetworkSQLiteHandler.COLUMN_SSID}, null, null, null, null, null);
+                new String[]{NetworkSQLiteHandler.COLUMN_ID, NetworkSQLiteHandler.COLUMN_SSID, NetworkSQLiteHandler.COLUMN_PASS}, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Network network = cursorToNetwork(cursor);
-            networks.add(network);
+            networksSSID.add(network.getSSID());
             cursor.moveToNext();
         }
         // make sure to close the cursor
         cursor.close();
-        return networks;
+        return networksSSID;
     }
 
     private Network cursorToNetwork(Cursor cursor) {

@@ -6,24 +6,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.ListViewCompat;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import tk.solutions_apex.wifipassworddatabase.helper.Network;
 import tk.solutions_apex.wifipassworddatabase.helper.NetworksDataSource;
-import tk.solutions_apex.wifipassworddatabase.helper.SQLiteHandler;
 
 
 /**
@@ -36,7 +28,7 @@ import tk.solutions_apex.wifipassworddatabase.helper.SQLiteHandler;
  */
 public class NetworksFragment extends Fragment {
     private NetworksDataSource datasource;
-    public static ArrayAdapter<Network> adapter;
+    public static ArrayAdapter<String> listAdapter;
 
     OnFragmentInteractionListener mListener;
 
@@ -82,13 +74,17 @@ public class NetworksFragment extends Fragment {
         datasource = new NetworksDataSource(getContext().getApplicationContext());
         datasource.open();
 
-        List<Network> ssids = datasource.getAllNetworkNames();
+        if (datasource.getAllNetworkNames().size() != 0) {
+            List<String> ssids = datasource.getAllNetworkNames();
 
-        // use the SimpleCursorAdapter to show the
-        // elements in a ListView
-        adapter = new ArrayAdapter<Network>(getContext(),
-                android.R.layout.simple_list_item_1, ssids);
-        ((ListView) view.findViewById(R.id.list_networks)).setAdapter(adapter);
+            // use the SimpleCursorAdapter to show the
+            // elements in a ListView
+            listAdapter = new ArrayAdapter<String>(getContext(),
+                    android.R.layout.simple_list_item_1, ssids);
+            ((ListView) view.findViewById(R.id.list_networks)).setAdapter(listAdapter);
+            view.findViewById(R.id.list_networks).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.no_network).setVisibility(View.GONE);
+        }
 
         return view;
     }
