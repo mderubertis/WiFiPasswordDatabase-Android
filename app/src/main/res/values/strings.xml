@@ -44,5 +44,7 @@
     <string name="prompt_ssid">Network Name</string>
     <string name="title_activity_new_network">New Network</string>
     <string name="action_add_network">Add Network</string>
+    <string name="title_activity_network_view">Network Details</string>
+    <string name="title_activity_network_detail">Network Detail</string>
 
 </resources>

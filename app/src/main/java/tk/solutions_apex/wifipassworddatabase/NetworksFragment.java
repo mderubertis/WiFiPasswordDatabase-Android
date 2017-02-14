@@ -1,5 +1,6 @@
 package tk.solutions_apex.wifipassworddatabase;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,8 +10,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -29,7 +32,6 @@ import tk.solutions_apex.wifipassworddatabase.helper.NetworksDataSource;
 public class NetworksFragment extends Fragment {
     private NetworksDataSource datasource;
     public static ArrayAdapter<String> listAdapter;
-
     OnFragmentInteractionListener mListener;
 
     public NetworksFragment() {
@@ -74,6 +76,18 @@ public class NetworksFragment extends Fragment {
         datasource = new NetworksDataSource(getContext().getApplicationContext());
         datasource.open();
 
+        ListView listView = (ListView) view.findViewById(R.id.list_networks);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent netDetail = new Intent(view.getContext(), NetworkDetailActivity.class);
+                netDetail.putExtra("networkID", position);
+                startActivity(netDetail);
+            }
+        });
+
+
         if (datasource.getAllNetworkNames().size() != 0) {
             List<String> ssids = datasource.getAllNetworkNames();
 
@@ -81,7 +95,7 @@ public class NetworksFragment extends Fragment {
             // elements in a ListView
             listAdapter = new ArrayAdapter<String>(getContext(),
                     android.R.layout.simple_list_item_1, ssids);
-            ((ListView) view.findViewById(R.id.list_networks)).setAdapter(listAdapter);
+            listView.setAdapter(listAdapter);
             view.findViewById(R.id.list_networks).setVisibility(View.VISIBLE);
             view.findViewById(R.id.no_network).setVisibility(View.GONE);
         }

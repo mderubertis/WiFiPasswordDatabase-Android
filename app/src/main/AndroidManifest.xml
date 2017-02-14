@@ -38,6 +38,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tk.solutions_apex.wifipassworddatabase.MainActivity" />
         </activity>
+        <activity
+            android:name=".NetworkDetailActivity"
+            android:label="@string/title_activity_network_detail"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tk.solutions_apex.wifipassworddatabase.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
