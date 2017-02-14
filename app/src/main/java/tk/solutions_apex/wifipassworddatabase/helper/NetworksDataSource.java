@@ -89,13 +89,13 @@ public class NetworksDataSource {
         return networksSSID;
     }
 
-    public List<String> getNetwork(int id) {
-        List<String> network = new ArrayList<>();
+    public Network getNetwork(int id) {
 
         Cursor cursor = database.query(NetworkSQLiteHandler.TABLE_NETWORKS,
                 new String[]{NetworkSQLiteHandler.COLUMN_ID, NetworkSQLiteHandler.COLUMN_SSID, NetworkSQLiteHandler.COLUMN_PASS}, null, null, null, null, null);
 
-        cursor.move(id);
+        cursor.moveToPosition(id);
+        Network network = cursorToNetwork(cursor);
 
         // make sure to close the cursor
         cursor.close();
