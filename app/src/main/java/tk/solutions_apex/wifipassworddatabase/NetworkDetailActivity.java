@@ -12,8 +12,15 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import org.cryptonode.jncryptor.AES256JNCryptor;
+import org.cryptonode.jncryptor.CryptorException;
+import org.cryptonode.jncryptor.JNCryptor;
+
+import java.util.HashMap;
+
 import tk.solutions_apex.wifipassworddatabase.helper.Network;
 import tk.solutions_apex.wifipassworddatabase.helper.NetworksDataSource;
+import tk.solutions_apex.wifipassworddatabase.helper.SQLiteHandler;
 
 public class NetworkDetailActivity extends AppCompatActivity {
     private NetworksDataSource datasource;
@@ -33,15 +40,30 @@ public class NetworkDetailActivity extends AppCompatActivity {
         datasource = new NetworksDataSource(getApplicationContext());
         datasource.open();
 
+        SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+        final HashMap<String, String> user = db.getUserDetails();
+
         int netID = getIntent().getExtras().getInt("networkID", 0);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String SSID = datasource.getNetwork(netID).getSSID();
-        String password = datasource.getNetwork(netID).getPassword();
+        byte[] dbPassword = datasource.getNetwork(netID).getPassword();
+
+        JNCryptor cryptor = new AES256JNCryptor();
+
+        byte[] password = new byte[0];
+        char[] hash = user.get("uid").toCharArray();
+        try {
+            password = cryptor.decryptData(dbPassword, hash);
+        } catch (CryptorException e) {
+            // Something went wrong
+            Log.e("NetworkDetails", String.valueOf(e.getStackTrace()[0]));
+            e.printStackTrace();
+        }
 
         netName.setText(SSID);
-        netPass.setText(password);
+        netPass.setText(new String(password));
 
         findViewById(R.id.showPass).setOnClickListener(new View.OnClickListener() {
             @Override

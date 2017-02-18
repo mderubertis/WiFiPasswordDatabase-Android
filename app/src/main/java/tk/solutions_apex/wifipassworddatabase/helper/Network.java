@@ -7,7 +7,7 @@ package tk.solutions_apex.wifipassworddatabase.helper;
 public class Network {
     private long id;
     private String ssid;
-    private String password;
+    private byte[] password;
 
     public long getId() {
         return id;
@@ -25,11 +25,11 @@ public class Network {
         this.ssid = ssid;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(byte[] password) {
         this.password = password;
     }
 

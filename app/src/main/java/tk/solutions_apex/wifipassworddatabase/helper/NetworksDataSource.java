@@ -33,7 +33,7 @@ public class NetworksDataSource {
         dbHelper.close();
     }
 
-    public Network createNetwork(String ssid, String password) {
+    public Network createNetwork(String ssid, byte[] password) {
         ContentValues values = new ContentValues();
         values.put(NetworkSQLiteHandler.COLUMN_SSID, ssid);
         values.put(NetworkSQLiteHandler.COLUMN_PASS, password);
@@ -106,7 +106,7 @@ public class NetworksDataSource {
         Network network = new Network();
         network.setId(cursor.getLong(0));
         network.setSSID(cursor.getString(1));
-        network.setPassword(cursor.getString(2));
+        network.setPassword(cursor.getBlob(2));
         return network;
     }
 }
