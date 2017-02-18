@@ -62,7 +62,6 @@ public class NewNetworkActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.d("NewNetwork", new String(ciphertext) + " / " + new String(hash));
                 // save the new comment to the database
                 network = datasource.createNetwork(mSSID.getText().toString(), ciphertext);
                 datasource.close();
